@@ -14,8 +14,10 @@ from random import choice
 # made by the player.
 MAX_WRONG_GUESSES=6
 
+
 # This class represents a game of Hangman.
 class Hangman:
+
     def __init__(self) -> None:
         """
         The `__init__` function initializes a Hangman game window with different frames for canvas,
@@ -47,6 +49,8 @@ class Hangman:
         self._won_games = 0
         self._new_game()
 
+
+
     def _select_word(self):
         """
         The function `_select_word` reads a list of words from a file, selects a random word from the
@@ -55,9 +59,11 @@ class Hangman:
         selects a random word from the list, strips any leading or trailing whitespace, converts it to
         uppercase, and returns the selected word.
         """
+
         with open("words.txt", mode="r", encoding="utf-8") as words:
             word_list = words.readlines()
         return choice(word_list).strip().upper()
+
 
 
     def _build_guessed_word(self):
@@ -69,6 +75,7 @@ class Hangman:
         actual letter, and any letters that have not been guessed with an underscore "_". The letters
         are separated by spaces in the returned string.
         """
+
         current_letters = []
         for letter in self._target_word:
             if letter in self._guessed_letters:
@@ -78,16 +85,19 @@ class Hangman:
         return " ".join(current_letters)
 
 
+
     def read_event(self):
         """
         This function reads an event from a window and returns the event ID.
         :return: The `read_event` method returns the event ID of the event read from the window. If
         there is no event, it returns `None`.
         """
+
         event = self._window.read()
         event_id = event[0] if event is not None else None
         return event_id
     
+
 
     def process_event(self, event):
         """
@@ -98,6 +108,7 @@ class Hangman:
         processed. The code snippet provided shows a method `process_event` that takes this `event` as
         input and performs different actions based on the value of the `event` string
         """
+
         if event[:8] == "-letter-":
             self._play(letter=event[8])
         elif event == "-RESTART-":
@@ -105,6 +116,7 @@ class Hangman:
         elif event == "-NEW-":
             self._new_game()
     
+
 
     def is_over(self):
         """
@@ -116,6 +128,7 @@ class Hangman:
         1. If the number of `_wrong_guesses` is equal to `MAX_WRONG_GUESSES`.
         2. If the set of characters in `_target_word`
         """
+
         return any(
             [
                 self._wrong_guesses == MAX_WRONG_GUESSES,
@@ -124,11 +137,13 @@ class Hangman:
         )
     
 
+
     def check_winner(self):
         """
         The `check_winner` function determines if the player has won or lost the game and prompts for a new
         game.
         """
+
         self._played_games += 1
         if self._wrong_guesses < MAX_WRONG_GUESSES:
             self._won_games += 1
@@ -149,19 +164,25 @@ class Hangman:
         if not self.quit:
             self._new_game()
 
+
+
     def close(self):
         """
         The `close` function closes the window associated with the object.
         """
+
         self._window.close()
+
 
 
     def _new_game(self):
         """
         The `_new_game` function initializes a new game by selecting a target word and restarting the game.
         """
+
         self._target_word = self._select_word()
         self._restart_game()
+
 
 
     def _restart_game(self):
@@ -170,6 +191,7 @@ class Hangman:
         guesses count, updating the guessed word display, enabling all letter buttons, and redrawing the
         scaffold.
         """
+
         self._guessed_letters = set()
         self._wrong_guesses = 0
         self._guessed_word = self._build_guessed_word()
@@ -180,6 +202,7 @@ class Hangman:
         self._window["-DISPLAY-WORD-"].update(self._guessed_word)
     
 
+
     def _play(self, letter):
         """
         The `_play` function updates the game state based on the player's guessed letter.
@@ -188,6 +211,7 @@ class Hangman:
         implementation where a player guesses a letter. The method updates the game state based on the
         guessed letter
         """
+
         if letter not in self._target_word:
             self._wrong_guesses += 1
         self._guessed_letters.add(letter)
@@ -198,6 +222,7 @@ class Hangman:
         self._draw_hanged_man()
 
 
+
     def _build_canvas_frame(self):
         """
         The `_build_canvas_frame` function creates a Frame element with a Graph element inside for a Hangman
@@ -205,6 +230,7 @@ class Hangman:
         :return: A `Frame` object is being returned with the title "Hangman" and containing a `Graph`
         element with the specified parameters.
         """
+
         return sg.Frame(
             "Hangman",
             [
@@ -220,6 +246,8 @@ class Hangman:
             font="Any 20",
         )
     
+
+
     def _build_letters_frame(self):
         """
         The function `_build_letters_frame` creates a GUI column with letter buttons arranged in groups
@@ -229,6 +257,7 @@ class Hangman:
         alphabet, styled with Courier font size 20 and a border width of 0. The buttons have keys
         assigned based on the letter they represent and are set to enable events.
         """
+
         letter_groups = [
             ascii_uppercase[i : i + 4]
             for i in range(0, len(ascii_uppercase), 4)
@@ -261,6 +290,7 @@ class Hangman:
         )
 
 
+
     def _build_guessed_word_frame(self):
         """
         The function `_build_guessed_word_frame` returns a PySimpleGUI Frame containing a Text element
@@ -269,6 +299,7 @@ class Hangman:
         element has the key "-DISPLAY-WORD-" and a font style of "Courier 20". The frame is centered
         using the element_justification parameter.
         """
+
         return sg.Frame(
             "",
             [
@@ -283,6 +314,7 @@ class Hangman:
         )
 
 
+
     def _build_action_buttons_frame(self):
         """
         The function `_build_action_buttons_frame` creates a frame with buttons for "New", "Restart",
@@ -292,6 +324,7 @@ class Hangman:
         "-QUIT-") and a font size of 20. The buttons are spaced out using `sg.Sizer` elements to provide
         padding between them. The frame itself also has a font size
         """
+
         return sg.Frame(
             "",
             [
@@ -326,6 +359,7 @@ class Hangman:
         """
         The `_draw_scaffold` function draws a scaffold using specified lines and widths on a canvas.
         """
+
         lines = [
             ((40, 55), (180, 55), 10),
             ((165, 60), (165, 365), 10),
@@ -337,11 +371,13 @@ class Hangman:
             self._canvas.DrawLine(*points, color="black", width=width)
 
 
+
     def _draw_hanged_man(self):
         """
         The function `_draw_hanged_man` defines the body parts of a hanged man to be drawn on a canvas
         based on the number of wrong guesses.
         """
+
         head = (100, 290)
         torso = [((100, 270), (100, 170))]
         left_arm = [
@@ -384,7 +420,9 @@ class Hangman:
             for part in body[self._wrong_guesses - 2]:
                 self._canvas.DrawLine(*part, color="red", width=2)
 
-    
+
+
+
 # The code is a Python script that implements the text-based Hangman game. It
 # creates an instance of the Hangman class and enters a loop where it continuously checks for events,
 # processes them, and checks if the game is over. The loop continues until the game is either won,
@@ -401,5 +439,4 @@ if __name__ == "__main__":
             game.process_event(event_id)
         if not game.quit:
             game.check_winner()
-
     game.close()
